@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin — É Os Pé Na Porta</title>
+
+<style>
+:root{
+  --bg:#0b0b0f;
+  --panel:#12121a;
+  --panel2:#0f0f16;
+  --red:#e53935;
+  --redSoft:#ff4d4d;
+  --text:#f5f5ff;
+  --muted:#b7b7d6;
+  --border:#2a2a40;
+  --radius:18px;
+  --shadow:0 18px 60px rgba(0,0,0,.55);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,Segoe UI,Roboto,Arial;
+  background:
+    radial-gradient(1200px 700px at 10% -10%, rgba(255,0,0,.12), transparent 60%),
+    radial-gradient(900px 600px at 90% 0%, rgba(255,80,80,.08), transparent 60%),
+    var(--bg);
+  color:var(--text);
+  padding:24px;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:900;
+  font-size:22px;
+}
+
+.badge{
+  background:rgba(255,0,0,.12);
+  border:1px solid rgba(255,0,0,.35);
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+}
+
+.table th, .table td{
+  text-align:left;
+  padding:12px;
+  border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+
+.table th{
+  color:var(--muted);
+  font-weight:700;
+}
+
+.status{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.pending{background:#222;color:#ffd700}
+.approved{background:#143;color:#6cff9a}
+.rejected{background:#411;color:#ff6c6c}
+
+.btn{
+  border:none;
+  padding:8px 12px;
+  border-radius:12px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.btn-approve{
+  background:#2ecc71;
+  color:#0a1a0f;
+}
+
+.btn-reject{
+  background:#e53935;
+  color:white;
+}
+
+.btn:hover{opacity:.9}
+
+.footer{
+  text-align:center;
+  color:var(--muted);
+  margin-top:16px;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="logo">🦶 É Os Pé Na Porta — Painel Admin</div>
+    <div class="badge">Dashboard Staff</div>
+  </div>
+
+  <div class="card">
+    <h3>📋 Inscrições Pendentes</h3>
+
+    <table class="table" id="formsTable">
+      <thead>
+        <tr>
+          <th>Discord</th>
+          <th>Nick</th>
+          <th>Idade</th>
+          <th>Motivo</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Populado via API -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    Painel administrativo • É Os Pé Na Porta 🦶
+  </div>
+
+</div>
+
+<script>
+const API_URL = "/api/forms"; // endpoint da API
+
+async function loadForms(){
+  try{
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    const tbody = document.querySelector("#formsTable tbody");
+    tbody.innerHTML = "";
+
+    data.forEach(f => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${f.discordTag || "Desconhecido"}</td>
+        <td>${f.nick}</td>
+        <td>${f.idade}</td>
+        <td>${f.motivo.substring(0,80)}...</td>
+        <td><span class="status pending">Pendente</span></td>
+        <td>
+          <button class="btn btn-approve" onclick="approve('${f.token}')">Aprovar</button>
+          <button class="btn btn-reject" onclick="reject('${f.token}')">Recusar</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+  }catch(e){
+    console.error("Erro ao carregar forms:", e);
+  }
+}
+
+async function approve(token){
+  await fetch(`/api/forms/${token}/approve`, {method:"POST"});
+  alert("✅ Aprovado!");
+  loadForms();
+}
+
+async function reject(token){
+  await fetch(`/api/forms/${token}/reject`, {method:"POST"});
+  alert("❌ Recusado!");
+  loadForms();
+}
+
+loadForms();
+</script>
+
+</body>
+</html>
