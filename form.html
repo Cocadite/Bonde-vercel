@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Formulário Bonde</title>
+<style>
+body{font-family:Arial;background:#0b0b0f;color:#fff;padding:24px}
+.card{max-width:520px;margin:auto;background:#141421;padding:20px;border-radius:16px}
+label{margin-top:12px;display:block}
+input,textarea{width:100%;padding:10px;border-radius:10px;background:#0f0f19;color:white;border:1px solid #333}
+button{margin-top:16px;width:100%;padding:12px;border-radius:12px;background:#ffd700;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>📋 Formulário do Bonde</h2>
+
+<form id="f">
+<input type="hidden" id="token" name="token">
+
+<label>Nick</label>
+<input name="nick" required>
+
+<label>Idade</label>
+<input name="idade" type="number" required>
+
+<label>Por que quer entrar?</label>
+<textarea name="motivo" required></textarea>
+
+<label>Link do bonde</label>
+<input name="linkBonde" value="https://www.roblox.com/share/g/1003923644" required>
+
+<button type="submit">Enviar</button>
+</form>
+
+<p id="msg"></p>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+document.getElementById("token").value = params.get("token") || "";
+
+document.getElementById("f").addEventListener("submit", async e => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  const r = await fetch("/api/submit", {
+    method: "POST",
+    headers: {"content-type":"application/json"},
+    body: JSON.stringify(data)
+  });
+  document.getElementById("msg").innerText = await r.text();
+});
+</script>
+
+</body>
+</html>
