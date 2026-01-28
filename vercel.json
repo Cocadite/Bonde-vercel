@@ -1,5 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/form", "destination": "/public/form.html" }
-  ]
-}
