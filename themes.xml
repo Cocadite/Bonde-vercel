@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.OlhoDeDeus" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/white_primary</item>
+        <item name="colorPrimaryVariant">@color/gray_text</item>
+        <item name="colorOnPrimary">@color/black_primary</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/white_primary</item>
+        <item name="colorSecondaryVariant">@color/gray_text</item>
+        <item name="colorOnSecondary">@color/black_primary</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/black_primary</item>
+        <item name="android:textColor">@color/white_primary</item>
+        <item name="android:editTextColor">@color/white_primary</item>
+        <item name="android:textColorHint">@color/gray_text</item>
+    </style>
+</resources>
